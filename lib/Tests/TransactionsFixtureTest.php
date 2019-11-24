@@ -41,8 +41,10 @@ use \Swagger\Client\ObjectSerializer;
 use Swagger\Client\Model\CreditCardInformationModel;
 use Swagger\Client\Model\AttributeValueModel;
 use Swagger\Client\Api\TransactionsApi;
+use Swagger\Client\Api\TransactionFeesApi;
 use Swagger\Client\Model\PostTransactionRequestModel;
 use Swagger\Client\Model\PostVoidTransactionRequestModel;
+use Swagger\Client\Model\PostTransactionFeesRequestModel;
 require_once '../../vendor/autoload.php';
 
 /**
@@ -58,6 +60,7 @@ class TransactionsFixtureTest extends TestCase
 {
 
     private $transactionsApi;   
+    private $transactionFeesApi;
     /**
      * Prepares the environment before running a test.
      */
@@ -73,6 +76,7 @@ class TransactionsFixtureTest extends TestCase
         $apiClient = new ApiClient($configuration);
 		
         $this->transactionsApi = new TransactionsApi($apiClient);
+        $this->transactionFeesApi = new TransactionFeesApi($apiClient);
     }
     
     /**
@@ -81,9 +85,33 @@ class TransactionsFixtureTest extends TestCase
     public function tearDown()
     {
         $this->transactionsApi = null;
+        $this->transactionFeesApi = null;
         parent::tearDown();
     }
     
+    /**
+     * Test case for Posting TransactionFees API
+     *
+     * POST API call for a random amount and returns object  
+     * consisting of achPayerFee and creditCardPayerFee fields.
+     */
+    public function testShould_Successfully_Post_TransactionFees_API()
+    {
+        //Get random amount between 1 and 1000
+        $randomAmount = rand(1,1000);  
+        //uncomment print_r calls in this method to inspect request and response objects
+        //print_r($randomAmount);
+        
+        $postTransactionFeesRequestModel = new PostTransactionFeesRequestModel();
+        $postTransactionFeesRequestModel->setAmount($randomAmount);
+
+        //print_r($postTransactionFeesRequestModel);
+
+        $transactionFeesResponseModel = new PostTransactionFeesResponseModel();
+        $transactionFeesResponseModel = $this->transactionFeesApi->transactionFeesPost($postTransactionFeesRequestModel);
+        //print_r($transactionFeesResponseModel);
+        $this->assertNotNull($transactionFeesResponseModel);
+    }
     
     /**
      * Test case for TransactionsFixture
