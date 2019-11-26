@@ -170,7 +170,7 @@ class TransactionFeesApi
                 $headerParams
             );
             
-            return array($response, $statusCode, $httpHeader);
+            return array(null, $statusCode, $httpHeader);
             
         } catch (ApiException $e) {
             switch ($e->getCode()) { 
